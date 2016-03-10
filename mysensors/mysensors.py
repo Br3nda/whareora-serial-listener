@@ -25,7 +25,7 @@ class Gateway(object):
         self.event_callback = event_callback
         self.sensors = {}
         self.metric = True  # if true - use metric, if false - use imperial
-        self.debug = False  # if true - print all received messages
+        self.debug = True  # if true - print all received messages
         self.persistence = persistence  # if true - save sensors to disk
         self.persistence_file = persistence_file  # path to persistence file
         if persistence:
@@ -182,7 +182,11 @@ class Gateway(object):
         Also save sensors if persistence is enabled.
         """
         if self.event_callback is not None:
-            self.event_callback('sensor_update', nid)
+            try:
+                self.event_callback('sensor_update', nid)
+            except Exception as e:
+                LOGGER.error("Error occurred in event callback")
+                LOGGER.exception(e)
 
         if self.persistence:
             self._save_sensors()
@@ -326,11 +330,12 @@ class SerialGateway(Gateway, threading.Thread):
                 continue
             try:
                 response = self.handle_queue()
-            except ValueError:
+            except ValueError as e:
                 LOGGER.warning(
                     'Error decoding message from gateway, '
                     'probably received partial data before connection '
                     'was complete.')
+                LOGGER.exception(e)
             if response is not None:
                 try:
                     self.send(response.encode())

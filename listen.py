@@ -3,13 +3,21 @@ from enum import IntEnum
 
 class Station(IntEnum):
   MASTER_BEDROOM = 1
-  LIVING_ROOM = 2
+  KITCHEN = 2
+  LIVING_ROOM = 3
+  CASEY_ROOM = 4
+  STUDY = 5
+
 
 def cb(type, nid):
   print("CALLBACK for sensor: ", nid)
   sensor = gw.sensors[nid]
   print(sensor.sketch_name, sensor.sketch_version)
-  station_name = Station(nid).name
+  try:
+    station_name = Station(nid).name
+  except ValueError:
+    station_name = "UNKNOWN_STATION_{nid}".format(nid=nid)
+
   print(station_name)
 
   for i, child in sensor.children.items():    

@@ -8,7 +8,7 @@ openhab_host = '10.1.1.85'
 openhab_port = '8080'
 
 def send(station, key, value):
-  url = 'http://{host}:{port}/rest/items/MySensors_{station}{key}/state'.format(host=openhab_host, port=openhab_port, station=station, key=key)
+  url = 'http://{host}:{port}/rest/items/MySensors_{station}_{key}/state'.format(host=openhab_host, port=openhab_port, station=station, key=key)
 
   response = requests.put(url, headers={'Content-Type': 'text/plain'}, data=str(value))
   print(response.text)

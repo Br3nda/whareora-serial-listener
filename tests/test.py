@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 
 import mysensors.mysensors as my
-from mysensors.const_14 import MessageType, Internal, Presentation, SetReq
+from mysensors.const_15 import MessageType, Internal, Presentation, SetReq
 
 
 class TestGateway(unittest.TestCase):
