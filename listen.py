@@ -2,11 +2,12 @@ from mysensors import mysensors, openhab
 from enum import IntEnum
 
 class Station(IntEnum):
-  MASTER_BEDROOM = 1
+  MASTER_BEDROOM = 6
   KITCHEN = 2
   LIVING_ROOM = 3
   CASEY_ROOM = 4
   STUDY = 5
+
 
 
 def cb(type, nid):

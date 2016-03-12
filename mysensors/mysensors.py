@@ -331,22 +331,24 @@ class SerialGateway(Gateway, threading.Thread):
             try:
                 response = self.handle_queue()
             except ValueError as e:
+                LOGGER.exception(e)
                 LOGGER.warning(
                     'Error decoding message from gateway, '
                     'probably received partial data before connection '
                     'was complete.')
-                LOGGER.exception(e)
             if response is not None:
                 try:
                     self.send(response.encode())
-                except ValueError:
+                except ValueError as e:
+                    LOGGER.exception(e)
                     LOGGER.exception('Invalid response')
                     continue
             try:
                 line = self.serial.readline()
                 if not line:
                     continue
-            except serial.SerialException:
+            except serial.SerialException as e:
+                LOGGER.exception(e)
                 LOGGER.exception('Serial exception')
                 continue
             except TypeError:
@@ -357,7 +359,8 @@ class SerialGateway(Gateway, threading.Thread):
             try:
                 string = line.decode('utf-8')
                 self.fill_queue(self.logic, (string,))
-            except ValueError:
+            except ValueError as e:
+                LOGGER.exception(e)
                 LOGGER.warning(
                     'Error decoding message from gateway, '
                     'probably received bad byte.')
